@@ -21,12 +21,12 @@ function backup() {
 
         lava_backup_dir="$backup_dir/Lava backup"
         mkdir -p "$lava_backup_dir"
-
+        printGreen "Копіюємо backup файли ноди Lava в папку /root/BACKUPNODES/Lava backup" && sleep 2
         cp "/root/.lava/config/priv_validator_key.json" "$lava_backup_dir/"
         cp "/root/.lava/config/node_key.json" "$lava_backup_dir/"
         cp "/root/.lava/data/priv_validator_state.json" "$lava_backup_dir/"
         echo ""
-        printGreen "Файли ноди Lava скопійовано в папку /root/BACKUPNODES/Lava backup" && sleep 2
+        
 
         gear_backup_dir="$backup_dir/Gear backup"
         mkdir -p "$gear_backup_dir"
@@ -35,9 +35,9 @@ function backup() {
         gear_files_to_copy=( "$gear_source_dir/secret_ed"* )
         for gear_file_to_copy in "${gear_files_to_copy[@]}"; do
             if [ -f "$gear_file_to_copy" ]; then
+                printGreen "Копіюємо backup файли ноди Gear в папку /root/BACKUPNODES/Gear backup" && sleep 2
                 cp "$gear_file_to_copy" "$gear_backup_dir/"
                 echo ""
-                printGreen "Файли ноди Gear скопійовано в папку /root/BACKUPNODES/Gear backup" && sleep 2
             fi
         done
 
@@ -48,20 +48,19 @@ function backup() {
         subspace_files_to_copy=( "$subspace_source_dir/secret_ed"* )
         for subspace_file_to_copy in "${subspace_files_to_copy[@]}"; do
             if [ -f "$subspace_file_to_copy" ]; then
+                printGreen "Копіюємо backup файли ноди Lava в папку /root/BACKUPNODES/Subspace backup" && sleep 2
                 cp "$subspace_file_to_copy" "$subspace_backup_dir/"
                 echo ""
-                printGreen "Бекап файли ноди Subspace скопійовано в папку /root/BACKUPNODES/Subspace backup" && sleep 2
             fi
         done
 
         nibiru_backup_dir="$backup_dir/Nibiru backup"
         mkdir -p "$nibiru_backup_dir"
-
+        printGreen "Копіюємо backup файли ноди Nibiru в папку /root/BACKUPNODES/Nibiru backup" && sleep 2
         cp "/root/.nibid/config/priv_validator_key.json" "$nibiru_backup_dir/"
         cp "/root/.nibid/config/node_key.json" "$nibiru_backup_dir/"
         cp "/root/.nibid/data/priv_validator_state.json" "$nibiru_backup_dir/"
         echo ""
-        printGreen "Файли ноди Nibiru скопійовано в папку /root/BACKUPNODES/Nibiru backup" && sleep 2
         echo ""
         echo "Backup завершено, перейдіть до основної директорії /root/BACKUPNODES та скопіюйте цю папку в безпечне місце собі на ПК."
         echo ""
