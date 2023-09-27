@@ -141,7 +141,7 @@ function move_backup_files() {
             printGreen "Бекап файли Gear перенесено"
             ;;
         Subspace)
-            cp "/root/BACKUPNODES/Subspace backup/secret*" "/root/.local/share/pulsar/node/chains/subspace_gemini_3f/network/"
+            cp "/root/BACKUPNODES/Subspace backup/secret_ed25519" "/root/.local/share/pulsar/node/chains/subspace_gemini_3f/network/"
             echo ""
             printGreen "Бекап файли Subspace перенесено" && sleep 1
             ;;
