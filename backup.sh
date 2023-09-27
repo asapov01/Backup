@@ -8,6 +8,10 @@ function printGreen {
     echo -e "\e[1m\e[32m${1}\e[0m"
 }
 
+function printRed {
+    echo -e "\e[1m\e[31m${1}\e[0m"
+}
+
 function backup() {
     backup_dir="/root/BACKUPNODES"
     mkdir -p "$backup_dir"
@@ -44,7 +48,7 @@ function backup() {
         for lava_file_to_copy in "${lava_files_to_copy[@]}"; do
             if [ -f "$lava_source_dir/$lava_file_to_copy" ]; then
                 echo "Збережено: $lava_file_to_copy" && sleep 1
-                cp "$lava_source_dir/$lava_file_to_copy" "$lava_backup_dir/"
+                cp "$lava_source_dir/$lava_file_to_copy" "$lava_backup_dir/" || { printRed "Не вдалось перенести бекап файли"; return; }
             fi
         done
     fi
@@ -65,7 +69,7 @@ function backup() {
         for gear_file_to_copy in "${gear_files_to_copy[@]}"; do
             if [ -f "$gear_file_to_copy" ]; then
                 echo "Збережено: $gear_file_to_copy" && sleep 1
-                cp "$gear_file_to_copy" "$gear_backup_dir/"
+                cp "$gear_file_to_copy" "$gear_backup_dir/" || { printRed "Не вдалось перенести бекап файли"; return; }
             fi
         done
     fi
@@ -86,7 +90,7 @@ function backup() {
         for subspace_file_to_copy in "${subspace_files_to_copy[@]}"; do
             if [ -f "$subspace_file_to_copy" ]; then
                 echo "Збережено: $subspace_file_to_copy" && sleep 1
-                cp "$subspace_file_to_copy" "$subspace_backup_dir/"
+                cp "$subspace_file_to_copy" "$subspace_backup_dir/" || { printRed "Не вдалось перенести бекап файли"; return; }
             fi
         done
     fi
@@ -107,7 +111,7 @@ function backup() {
         for nibiru_file_to_copy in "${nibiru_files_to_copy[@]}"; do
             if [ -f "$nibiru_source_dir/$nibiru_file_to_copy" ]; then
                 echo "Збережено: $nibiru_file_to_copy" && sleep 1
-                cp "$nibiru_source_dir/$nibiru_file_to_copy" "$nibiru_backup_dir/"
+                cp "$nibiru_source_dir/$nibiru_file_to_copy" "$nibiru_backup_dir/" || { printRed "Не вдалось перенести бекап файли"; return; }
             fi
         done
     fi
