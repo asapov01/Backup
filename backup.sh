@@ -141,7 +141,7 @@ function move_backup_files() {
             printGreen "Бекап файли Gear перенесено"
             ;;
         Subspace)
-            cp "/root/BACKUPNODES/Subspace backup/priv_validator_state.json" "/root/.local/share/gear/chains/gear_staging_testnet_v7/network/"
+            cp "/root/BACKUPNODES/Subspace backup/secret*" "/root/.local/share/pulsar/node/chains/subspace_gemini_3f/network/"
             echo ""
             printGreen "Бекап файли Subspace перенесено" && sleep 1
             ;;
