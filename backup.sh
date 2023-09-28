@@ -9,117 +9,63 @@ function printGreen {
 }
 
 function printRed {
-  echo -e "\e[1m\e[31m${1}\e[0m"
+    echo -e "\e[1m\e[31m${1}\e[0m"
+}
+
+function backup_node() {
+    node_name="$1"
+    source_dir="$2"
+    files_to_copy=("${@:3}")
+    backup_dir="/root/BACKUPNODES/${node_name} backup"
+
+    backup_message_printed=false
+
+    for file_to_copy in "${files_to_copy[@]}"; do
+        if [ -f "$source_dir/$file_to_copy" ]; then
+            backup_message_printed=true
+            break
+        fi
+    done
+
+    if [ "$backup_message_printed" == true ]; then
+        mkdir -p "$backup_dir"
+        for file_to_copy in "${files_to_copy[@]}"; do
+            if [ -f "$source_dir/$file_to_copy" ]; then
+                cp "$source_dir/$file_to_copy" "$backup_dir/" || { printRed "Не вдалось перенести бекап файли ноди $node_name"; return; }
+            fi
+        done
+        printGreen "Бекап файли ноди $node_name перенесено"
+    else
+        printRed "Не знайдено файли для бекапу ноди $node_name або SSD переповнений"
+    fi
 }
 
 function backup() {
-    backup_dir="/root/BACKUPNODES"
-    mkdir -p "$backup_dir"
-
     lava_source_dir="/root/.lava/"
     lava_files_to_copy=("config/priv_validator_key.json" "config/node_key.json" "data/priv_validator_state.json")
-    lava_backup_dir="$backup_dir/Lava backup"
 
     gear_source_dir="/root/.local/share/gear/chains/gear_staging_testnet_v7/network/"
-    gear_files_to_copy=("$gear_source_dir/secret_ed"*)
-    gear_backup_dir="$backup_dir/Gear backup"
+    gear_files_to_copy=("secret_ed25519")  
 
     subspace_source_dir="/root/.local/share/pulsar/node/chains/subspace_gemini_3f/network/"
-    subspace_files_to_copy=("$subspace_source_dir/secret_ed"*)
-    subspace_backup_dir="$backup_dir/Subspace backup"
+    subspace_files_to_copy=("secret_ed25519") 
 
     nibiru_source_dir="/root/.nibid/"
     nibiru_files_to_copy=("config/priv_validator_key.json" "config/node_key.json" "data/priv_validator_state.json")
-    nibiru_backup_dir="$backup_dir/Nibiru backup"
 
-    backup_message_printed=false
-
-    for lava_file_to_copy in "${lava_files_to_copy[@]}"; do
-        if [ -f "$lava_source_dir/$lava_file_to_copy" ]; then
-            backup_message_printed=true
-            break
-        fi
-    done
-
-    if [ "$backup_message_printed" == true ]; then
-        mkdir -p "$lava_backup_dir"
-        for lava_file_to_copy in "${lava_files_to_copy[@]}"; do
-            if [ -f "$lava_source_dir/$lava_file_to_copy" ]; then
-                cp "$lava_source_dir/$lava_file_to_copy" "$lava_backup_dir/" || { printRed "Не вдалось перенести бекап файли ноди Lava"; return; }
-            fi
-        done
-    else
-        printRed "Не знайдено файли для бекапу ноди Lava або SSD переповнений"
-    fi
-
-    backup_message_printed=false
-
-    for gear_file_to_copy in "${gear_files_to_copy[@]}"; do
-        if [ -f "$gear_file_to_copy" ]; then
-            backup_message_printed=true
-            break
-        fi
-    done
-
-    if [ "$backup_message_printed" == true ]; then
-        mkdir -p "$gear_backup_dir"
-        for gear_file_to_copy in "${gear_files_to_copy[@]}"; do
-            if [ -f "$gear_file_to_copy" ]; then
-                cp "$gear_file_to_copy" "$gear_backup_dir/"
-            fi
-        done
-    else
-        printRed "Не знайдено файли для бекапу ноди Gear або SSD переповнений"
-    fi
-
-    backup_message_printed=false
-
-    for subspace_file_to_copy in "${subspace_files_to_copy[@]}"; do
-        if [ -f "$subspace_file_to_copy" ]; then
-            backup_message_printed=true
-            break
-        fi
-    done
-
-    if [ "$backup_message_printed" == true ]; then
-        mkdir -p "$subspace_backup_dir"
-        for subspace_file_to_copy in "${subspace_files_to_copy[@]}"; do
-            if [ -f "$subspace_file_to_copy" ]; then
-                cp "$subspace_file_to_copy" "$subspace_backup_dir/"
-            fi
-        done
-    else
-        printRed "Не знайдено файли для бекапу ноди Subspace або SSD переповнений"
-    fi
-
-    backup_message_printed=false
-
-    for nibiru_file_to_copy in "${nibiru_files_to_copy[@]}"; do
-        if [ -f "$nibiru_source_dir/$nibiru_file_to_copy" ]; then
-            backup_message_printed=true
-            break
-        fi
-    done
-
-    if [ "$backup_message_printed" == true ]; then
-        mkdir -p "$nibiru_backup_dir"
-        for nibiru_file_to_copy in "${nibiru_files_to_copy[@]}"; do
-            if [ -f "$nibiru_source_dir/$nibiru_file_to_copy" ]; then
-                cp "$nibiru_source_dir/$nibiru_file_to_copy" "$nibiru_backup_dir/"
-            fi
-        done
-    else
-        printRed "Не знайдено файли для бекапу ноди Nibiru або SSD переповнений"
-    fi
+    backup_node "Lava" "$lava_source_dir" "${lava_files_to_copy[@]}"
+    backup_node "Gear" "$gear_source_dir" "${gear_files_to_copy[@]}"
+    backup_node "Subspace" "$subspace_source_dir" "${subspace_files_to_copy[@]}" 
+    backup_node "Nibiru" "$nibiru_source_dir" "${nibiru_files_to_copy[@]}"
 }
 
 function move_backup_files() {
     read -p "Введіть назву ноди (Lava, Nibiru, Gear, Subspace): " node_name
     case "$node_name" in
         Lava)
-            cp "/root/BACKUPNODES/Lava backup/priv_validator_state.json" "/root/.lava/data/"
-            cp "/root/BACKUPNODES/Lava backup/node_key.json" "/root/.lava/config/"
-            cp "/root/BACKUPNODES/Lava backup/priv_validator_key.json" "/root/.lava/config/"
+            cp "/root/BACKUPNODES/Lava backup/priv_validator_state.json" "/root/.lava/data/"  
+            cp "/root/BACKUPNODES/Lava backup/node_key.json" "/root/.lava/config/"  
+            cp "/root/BACKUPNODES/Lava backup/priv_validator_key.json" "/root/.lava/config/"  
             systemctl restart lavad
             printGreen "Бекап файли Lava перенесено" && sleep 1
             printGreen "Вам залишилось тільки відновити ваш гаманець за допомогою мнемонічної фрази, командою: lavad keys add wallet --recover"
@@ -133,7 +79,7 @@ function move_backup_files() {
             printGreen "Вам залишилось тільки відновити ваш гаманець за допомогою мнемонічної фрази, командою: nibid keys add wallet --recover"
             ;;
         Gear)
-            cp "/root/BACKUPNODES/Gear backup/secret_ed"* "/root/.local/share/gear/chains/gear_staging_testnet_v7/network/"
+            cp "/root/BACKUPNODES/Gear backup/secret_ed25519" "/root/.local/share/gear/chains/gear_staging_testnet_v7/network/"
             systemctl restart gear
             printGreen "Бекап файли Gear перенесено"
             ;;
