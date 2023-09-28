@@ -8,6 +8,10 @@ function printGreen {
     echo -e "\e[1m\e[32m${1}\e[0m"
 }
 
+function printRed {
+  echo -e "\e[1m\e[31m${1}\e[0m"
+}
+
 function backup() {
     backup_dir="/root/BACKUPNODES"
     mkdir -p "$backup_dir"
