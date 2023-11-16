@@ -54,7 +54,7 @@ function backup() {
     nibiru_files_to_copy=("config/priv_validator_key.json" "config/node_key.json" "data/priv_validator_state.json")
 
     zetacore_source_dir="/root/.zetacored/"
-    zetacore_files_to_copy=("config/priv_validator.json" "config/node_key.json" "data/priv_validator_state.json")
+    zetacore_files_to_copy=("config/priv_validator_key.json" "config/node_key.json" "data/priv_validator_state.json")
 
     backup_node "Lava" "$lava_source_dir" "${lava_files_to_copy[@]}"
     backup_node "Gear" "$gear_source_dir" "${gear_files_to_copy[@]}"
