@@ -47,7 +47,7 @@ function backup() {
     gear_source_dir="/root/.local/share/gear/chains/gear_staging_testnet_v7/network/"
     gear_files_to_copy=("secret_ed25519")  
 
-    subspace_source_dir="/root/.local/share/pulsar/node/chains/subspace_gemini_3f/network/"
+    subspace_source_dir="/root/.local/share/pulsar/node/chains/subspace_gemini_3g/network/"
     subspace_files_to_copy=("secret_ed25519") 
 
     nibiru_source_dir="/root/.nibid/"
@@ -115,7 +115,7 @@ function view_backup_paths() {
     echo -e "\e[1m\e[32mGear:\e[0m"
     echo "/root/.local/share/gear/chains/gear_staging_testnet_v7/network/"
     echo -e "\e[1m\e[32mSubspace:\e[0m"
-    echo "/root/.local/share/pulsar/node/chains/subspace_gemini_3f/network/"
+    echo "/root/.local/share/pulsar/node/chains/subspace_gemini_3g/network/"
     echo -e "\e[1m\e[32mNibiru:\e[0m"
     echo "/root/.nibid/data/priv_validator_state.json"
     echo "/root/.nibid/config/node_key.json"
