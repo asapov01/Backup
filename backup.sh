@@ -88,7 +88,7 @@ function move_backup_files() {
             echo -e "\e[1m\e[32mБекап файли Gear перенесено\e[0m"
             ;;
         Subspace)
-            cp "/root/BACKUPNODES/Subspace backup/secret_ed25519" "/root/.local/share/subspace-node/chains/subspace_gemini_3g/network/"
+            cp "/root/BACKUPNODES/Subspace backup/secret_ed25519" "/root/.local/share/pulsar/node/chains/subspace_gemini_3g/network/"
             echo -e "\e[1m\e[32mБекап файли Subspace перенесено\e[0m" && sleep 1
             ;;
         Zetachain)
