@@ -126,7 +126,7 @@ function move_backup_files() {
             echo -e "\e[1m\e[32mВам залишилось тільки відновити ваш гаманець за допомогою мнемонічної фрази, командою: zetacored keys add wallet --recover\e[0m"
             ;;
         Dymension)
-            dymension_source_dir="$HOME/.dymension/"
+            dymension_source_dir="$HOME/.dymension"
             cp "/root/BACKUPNODES/Dymension backup/priv_validator_state.json" "$dymension_source_dir/data/"
             cp "/root/BACKUPNODES/Dymension backup/node_key.json" "$dymension_source_dir/config/"
             systemctl restart dymd.service
