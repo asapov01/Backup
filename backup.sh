@@ -96,19 +96,41 @@ function move_backup_files() {
             echo -e "\e[1m\e[32mВам залишилось тільки відновити ваш гаманець за допомогою мнемонічної фрази, командою: lavad keys add wallet --recover\e[0m"
             ;;
         Nibiru)
-            # ... (аналогічно інші ноди)
+            nibiru_source_dir="/root/.nibid/"
+            cp "/root/BACKUPNODES/Nibiru backup/priv_validator_state.json" "$nibiru_source_dir/data/"
+            cp "/root/BACKUPNODES/Nibiru backup/node_key.json" "$nibiru_source_dir/config/"
+            cp "/root/BACKUPNODES/Nibiru backup/priv_validator_key.json" "$nibiru_source_dir/config/"
+            systemctl restart nibid
+            echo -e "\e[1m\e[32mБекап файли Nibiru перенесено\e[0m" && sleep 1
+            echo -e "\e[1m\e[32mВам залишилось тільки відновити ваш гаманець за допомогою мнемонічної фрази, командою: nibid keys add wallet --recover\e[0m"
             ;;
         Gear)
-            # ... (аналогічно інші ноди)
+            gear_source_dir="/root/.local/share/gear/chains/gear_staging_testnet_v7/network/"
+            cp "/root/BACKUPNODES/Gear backup/secret_ed25519" "$gear_source_dir"
+            systemctl restart gear
+            echo -e "\e[1m\e[32mБекап файли Gear перенесено\e[0m"
             ;;
         Subspace)
-            # ... (аналогічно інші ноди)
+            subspace_source_dir="/root/.local/share/pulsar/node/chains/subspace_gemini_3g/network/"
+            cp "/root/BACKUPNODES/Subspace backup/secret_ed25519" "$subspace_source_dir"
+            echo -e "\e[1m\e[32mБекап файли Subspace перенесено\e[0m" && sleep 1
             ;;
         Zetachain)
-            # ... (аналогічно інші ноди)
+            zetacore_source_dir="/root/.zetacored/"
+            cp "/root/BACKUPNODES/Zetachain backup/priv_validator_state.json" "$zetacore_source_dir/data/"
+            cp "/root/BACKUPNODES/Zetachain backup/node_key.json" "$zetacore_source_dir/config/"
+            cp "/root/BACKUPNODES/Zetachain backup/priv_validator.json" "$zetacore_source_dir/config/"
+            systemctl restart zetacored
+            echo -e "\e[1m\e[32mБекап файли Zetachain перенесено\e[0m" && sleep 1
+            echo -e "\e[1m\e[32mВам залишилось тільки відновити ваш гаманець за допомогою мнемонічної фрази, командою: zetacored keys add wallet --recover\e[0m"
             ;;
         Dymension)
-            # ... (аналогічно інші ноди)
+            dymension_source_dir="$HOME/.dymension/"
+            cp "/root/BACKUPNODES/Dymension backup/priv_validator_state.json" "$dymension_source_dir/data/"
+            cp "/root/BACKUPNODES/Dymension backup/node_key.json" "$dymension_source_dir/config/"
+            systemctl restart dymd.service
+            echo -e "\e[1m\e[32mБекап файли Dymension перенесено\e[0m" && sleep 1
+            echo -e "\e[1m\e[32mВам залишилось тільки відновити ваш гаманець за допомогою мнемонічної фрази, командою: dymensiond keys add wallet --recover\e[0m"
             ;;
         Babylon)
             babylon_source_dir="$HOME/.babylond/"
@@ -124,9 +146,53 @@ function move_backup_files() {
     esac
 }
 
+
 function view_backup_paths() {
-    # ... (аналогічно інші ноди)
+    echo -e "\e[1m\e[32mBackup завершено, перейдіть до основної директорії /root/BACKUPNODES та скопіюйте цю папку в безпечне місце собі на ПК.\e[0m"
+    echo -e "\e[1m\e[32mНижче вказано шлях до директорій, куди потрібно переносити ваші backup файли в залежності від ноди.\e[0m"
+    case "$node_name" in
+        Lava)
+            echo -e "\e[1m\e[32mLava:\e[0m"
+            echo "/root/.lava/data/priv_validator_state.json"
+            echo "/root/.lava/config/node_key.json"
+            echo "/root/.lava/config/priv_validator_key.json"
+            ;;
+        Nibiru)
+            echo -e "\e[1m\e[32mNibiru:\e[0m"
+            echo "/root/.nibid/data/priv_validator_state.json"
+            echo "/root/.nibid/config/node_key.json"
+            echo "/root/.nibid/config/priv_validator_key.json"
+            ;;
+        Gear)
+            echo -e "\e[1m\e[32mGear:\e[0m"
+            echo "/root/.local/share/gear/chains/gear_staging_testnet_v7/network/"
+            ;;
+        Subspace)
+            echo -e "\e[1m\e[32mSubspace:\e[0m"
+            echo "/root/.local/share/pulsar/node/chains/subspace_gemini_3g/network/"
+            ;;
+        Zetachain)
+            echo -e "\e[1m\e[32mZetachain:\e[0m"
+            echo "/root/.zetacored/data/priv_validator_state.json"
+            echo "/root/.zetacored/config/node_key.json"
+            echo "/root/.zetacored/config/priv_validator.json"
+            ;;
+        Dymension)
+            echo -e "\e[1m\e[32mDymension:\e[0m"
+            echo "$HOME/.dymension/data/priv_validator_state.json"
+            echo "$HOME/.dymension/config/priv_validator_key.json"
+            ;;
+        Babylon)
+            echo -e "\e[1m\e[32mBabylon:\e[0m"
+            echo "$HOME/.babylond/data/priv_validator_state.json"
+            echo "$HOME/.babylond/config/priv_validator_key.json"
+            ;;
+        *)
+            echo "Некоректне ім'я ноди."
+            ;;
+    esac
 }
+
 
 function main_menu() {
     while true; do
