@@ -144,7 +144,7 @@ function move_backup_files() {
             zetacore_source_dir="$HOME/.zetacored/"
             cp "$HOME/BACKUPNODES/Zetachain backup/priv_validator_state.json" "$zetacore_source_dir/data/"
             cp "$HOME/BACKUPNODES/Zetachain backup/node_key.json" "$zetacore_source_dir/config/"
-            cp "$HOME/BACKUPNODES/Zetachain backup/priv_validator.json" "$zetacore_source_dir/config/"
+            cp "$HOME/BACKUPNODES/Zetachain backup/priv_validator_key.json" "$zetacore_source_dir/config/"
             systemctl restart zetacored
             echo -e "\e[1m\e[32mБекап файли Zetachain перенесено\e[0m" && sleep 1
             echo -e "\e[1m\e[32mВам залишилось тільки відновити ваш гаманець за допомогою мнемонічної фрази, командою: zetacored keys add wallet --recover\e[0m"
