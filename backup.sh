@@ -16,7 +16,7 @@ function backup_node() {
     node_name="$1"
     source_dir="$2"
     files_to_copy=("${@:3}")
-    backup_dir="/root/BACKUPNODES/${node_name} backup"
+    backup_dir="$HOME/BACKUPNODES/${node_name} backup"
 
     backup_message_printed=false
 
@@ -44,39 +44,55 @@ function backup() {
     read -p "Введіть ім'я ноди (Lava, Nibiru, Gear, Subspace, Zetachain, Dymension, Babylon): " node_name
     case "$node_name" in
         Lava)
-            lava_source_dir="/root/.lava/"
+            lava_source_dir="$HOME/.lava/"
             lava_files_to_copy=("config/priv_validator_key.json" "config/node_key.json" "data/priv_validator_state.json")
             backup_node "$node_name" "$lava_source_dir" "${lava_files_to_copy[@]}"
+            echo ""
+            printGreen "Ваш приватний ключ ноди Lava в тектосовому форматі, запишіть собі в безпечне місце:"
+            cat $HOME/.lava/config/priv_validator_key.json
+            echo ""
             ;;
         Nibiru)
-            nibiru_source_dir="/root/.nibid/"
+            nibiru_source_dir="$HOME/.nibid/"
             nibiru_files_to_copy=("config/priv_validator_key.json" "config/node_key.json" "data/priv_validator_state.json")
             backup_node "$node_name" "$nibiru_source_dir" "${nibiru_files_to_copy[@]}"
+            printGreen "Ваш приватний ключ ноди Nibiru в тектосовому форматі, запишіть собі в безпечне місце:"
+            cat $HOME/.nibid/config/priv_validator_key.json
+            echo ""
             ;;
         Gear)
-            gear_source_dir="/root/.local/share/gear/chains/gear_staging_testnet_v7/network/"
+            gear_source_dir="$HOME/.local/share/gear/chains/gear_staging_testnet_v7/network/"
             gear_files_to_copy=("secret_ed25519")
             backup_node "$node_name" "$gear_source_dir" "${gear_files_to_copy[@]}"
             ;;
         Subspace)
-            subspace_source_dir="/root/.local/share/pulsar/node/chains/subspace_gemini_3g/network/"
+            subspace_source_dir="$HOME/.local/share/pulsar/node/chains/subspace_gemini_3g/network/"
             subspace_files_to_copy=("secret_ed25519")
             backup_node "$node_name" "$subspace_source_dir" "${subspace_files_to_copy[@]}"
             ;;
         Zetachain)
-            zetacore_source_dir="/root/.zetacored/"
+            zetacore_source_dir="$HOME/.zetacored/"
             zetacore_files_to_copy=("config/priv_validator_key.json" "config/node_key.json" "data/priv_validator_state.json")
             backup_node "$node_name" "$zetacore_source_dir" "${zetacore_files_to_copy[@]}"
+            printGreen "Ваш приватний ключ ноди Zetachain в тектосовому форматі, запишіть собі в безпечне місце:"
+            cat $HOME/.zetacored/config/priv_validator_key.json
+            echo ""
             ;;
         Dymension)
             dymension_source_dir="$HOME/.dymension"
             dymension_files_to_copy=("config/priv_validator_key.json" "data/priv_validator_state.json")
             backup_node "$node_name" "$dymension_source_dir" "${dymension_files_to_copy[@]}"
+            printGreen "Ваш приватний ключ ноди Dymension в тектосовому форматі, запишіть собі в безпечне місце:"
+            cat $HOME/.dymension/config/priv_validator_key.json
+            echo ""
             ;;
         Babylon)
             babylon_source_dir="$HOME/.babylond"
             babylon_files_to_copy=("config/priv_validator_key.json" "data/priv_validator_state.json")
             backup_node "$node_name" "$babylon_source_dir" "${babylon_files_to_copy[@]}"
+            printGreen "Ваш приватний ключ ноди Babylon в тектосовому форматі, запишіть собі в безпечне місце:"
+            cat $HOME/.babylond/config/priv_validator_key.json
+            echo ""
 
             ;;
         *)
@@ -89,57 +105,77 @@ function move_backup_files() {
     read -p "Введіть назву ноди (Lava, Nibiru, Gear, Subspace, Zetachain, Dymension, Babylon): " node_name
     case "$node_name" in
         Lava)
-            cp "/root/BACKUPNODES/Lava backup/priv_validator_state.json" "/root/.lava/data/"
-            cp "/root/BACKUPNODES/Lava backup/node_key.json" "/root/.lava/config/"
-            cp "/root/BACKUPNODES/Lava backup/priv_validator_key.json" "/root/.lava/config/"
+            cp "$HOME/BACKUPNODES/Lava backup/priv_validator_state.json" "$HOME/.lava/data/"
+            cp "$HOME/BACKUPNODES/Lava backup/node_key.json" "$HOME/.lava/config/"
+            cp "$HOME/BACKUPNODES/Lava backup/priv_validator_key.json" "$HOME/.lava/config/"
             systemctl restart lavad
             echo -e "\e[1m\e[32mБекап файли Lava перенесено\e[0m" && sleep 1
             echo -e "\e[1m\e[32mВам залишилось тільки відновити ваш гаманець за допомогою мнемонічної фрази, командою: lavad keys add wallet --recover\e[0m"
+            echo ""
+            printGreen "Ваш приватний ключ ноди Lava в тектосовому форматі, порівняйте з вашим оригінальним початковим ключем:"
+            cat $HOME/.lava/config/priv_validator_key.json
+            echo ""
             ;;
         Nibiru)
-            nibiru_source_dir="/root/.nibid/"
-            cp "/root/BACKUPNODES/Nibiru backup/priv_validator_state.json" "$nibiru_source_dir/data/"
-            cp "/root/BACKUPNODES/Nibiru backup/node_key.json" "$nibiru_source_dir/config/"
-            cp "/root/BACKUPNODES/Nibiru backup/priv_validator_key.json" "$nibiru_source_dir/config/"
+            nibiru_source_dir="$HOME/.nibid/"
+            cp "$HOME/BACKUPNODES/Nibiru backup/priv_validator_state.json" "$nibiru_source_dir/data/"
+            cp "$HOME/BACKUPNODES/Nibiru backup/node_key.json" "$nibiru_source_dir/config/"
+            cp "$HOME/BACKUPNODES/Nibiru backup/priv_validator_key.json" "$nibiru_source_dir/config/"
             systemctl restart nibid
             echo -e "\e[1m\e[32mБекап файли Nibiru перенесено\e[0m" && sleep 1
             echo -e "\e[1m\e[32mВам залишилось тільки відновити ваш гаманець за допомогою мнемонічної фрази, командою: nibid keys add wallet --recover\e[0m"
+             echo ""
+            printGreen "Ваш приватний ключ ноди Nibiru в тектосовому форматі, порівняйте з вашим оригінальним початковим ключем:"
+            cat $HOME/.nibid/config/priv_validator_key.json
+            echo ""
             ;;
         Gear)
-            gear_source_dir="/root/.local/share/gear/chains/gear_staging_testnet_v7/network/"
-            cp "/root/BACKUPNODES/Gear backup/secret_ed25519" "$gear_source_dir"
+            gear_source_dir="$HOME/.local/share/gear/chains/gear_staging_testnet_v7/network/"
+            cp "$HOME/BACKUPNODES/Gear backup/secret_ed25519" "$gear_source_dir"
             systemctl restart gear
             echo -e "\e[1m\e[32mБекап файли Gear перенесено\e[0m"
             ;;
         Subspace)
-            subspace_source_dir="/root/.local/share/pulsar/node/chains/subspace_gemini_3g/network/"
-            cp "/root/BACKUPNODES/Subspace backup/secret_ed25519" "$subspace_source_dir"
+            subspace_source_dir="$HOME/.local/share/pulsar/node/chains/subspace_gemini_3g/network/"
+            cp "$HOME/BACKUPNODES/Subspace backup/secret_ed25519" "$subspace_source_dir"
             echo -e "\e[1m\e[32mБекап файли Subspace перенесено\e[0m" && sleep 1
             ;;
         Zetachain)
-            zetacore_source_dir="/root/.zetacored/"
-            cp "/root/BACKUPNODES/Zetachain backup/priv_validator_state.json" "$zetacore_source_dir/data/"
-            cp "/root/BACKUPNODES/Zetachain backup/node_key.json" "$zetacore_source_dir/config/"
-            cp "/root/BACKUPNODES/Zetachain backup/priv_validator.json" "$zetacore_source_dir/config/"
+            zetacore_source_dir="$HOME/.zetacored/"
+            cp "$HOME/BACKUPNODES/Zetachain backup/priv_validator_state.json" "$zetacore_source_dir/data/"
+            cp "$HOME/BACKUPNODES/Zetachain backup/node_key.json" "$zetacore_source_dir/config/"
+            cp "$HOME/BACKUPNODES/Zetachain backup/priv_validator.json" "$zetacore_source_dir/config/"
             systemctl restart zetacored
             echo -e "\e[1m\e[32mБекап файли Zetachain перенесено\e[0m" && sleep 1
             echo -e "\e[1m\e[32mВам залишилось тільки відновити ваш гаманець за допомогою мнемонічної фрази, командою: zetacored keys add wallet --recover\e[0m"
+            echo ""
+            printGreen "Ваш приватний ключ ноди Zetachain в тектосовому форматі, порівняйте з вашим оригінальним початковим ключем:"
+            cat $HOME/.zetacored/config/priv_validator_key.json
+            echo ""
             ;;
         Dymension)
             dymension_source_dir="$HOME/.dymension"
-            cp "/root/BACKUPNODES/Dymension backup/priv_validator_state.json" "$dymension_source_dir/data/"
-            cp "/root/BACKUPNODES/Dymension backup/node_key.json" "$dymension_source_dir/config/"
+            cp "$HOME/BACKUPNODES/Dymension backup/priv_validator_state.json" "$dymension_source_dir/data/"
+            cp "$HOME/BACKUPNODES/Dymension backup/node_key.json" "$dymension_source_dir/config/"
             systemctl restart dymd.service
             echo -e "\e[1m\e[32mБекап файли Dymension перенесено\e[0m" && sleep 1
             echo -e "\e[1m\e[32mВам залишилось тільки відновити ваш гаманець за допомогою мнемонічної фрази, командою: dymensiond keys add wallet --recover\e[0m"
+            echo ""
+            printGreen "Ваш приватний ключ ноди Dymension в тектосовому форматі, порівняйте з вашим оригінальним початковим ключем:"
+            cat $HOME/.dymension/config/priv_validator_key.json
+            echo ""
             ;;
         Babylon)
             babylon_source_dir="$HOME/.babylond/"
-            cp "/root/BACKUPNODES/Babylon backup/priv_validator_state.json" "$babylon_source_dir/data/"
-            cp "/root/BACKUPNODES/Babylon backup/priv_validator_key.json" "$babylon_source_dir/config/"
+            cp "$HOME/BACKUPNODES/Babylon backup/priv_validator_state.json" "$babylon_source_dir/data/"
+            cp "$HOME/BACKUPNODES/Babylon backup/priv_validator_key.json" "$babylon_source_dir/config/"
             systemctl restart babylond
             echo -e "\e[1m\e[32mБекап файли Babylon перенесено\e[0m" && sleep 1
             echo -e "\e[1m\e[32mВам залишилось тільки відновити ваш гаманець за допомогою мнемонічної фрази, командою: babylond keys add wallet --recover\e[0m"
+            echo ""
+            printGreen "Ваш приватний ключ ноди Babylon в тектосовому форматі, порівняйте з вашим оригінальним початковим ключем:"
+            cat $HOME/.babylond/config/priv_validator_key.json
+            echo ""
             ;;
         *)
             echo "Некоректне ім'я ноди."
@@ -149,34 +185,34 @@ function move_backup_files() {
 
 
 function view_backup_paths() {
-    echo -e "\e[1m\e[32mBackup завершено, перейдіть до основної директорії /root/BACKUPNODES та скопіюйте цю папку в безпечне місце собі на ПК.\e[0m"
+    echo -e "\e[1m\e[32mBackup завершено, перейдіть до основної директорії $HOME/BACKUPNODES та скопіюйте цю папку в безпечне місце собі на ПК.\e[0m"
     echo -e "\e[1m\e[32mНижче вказано шлях до директорій, куди потрібно переносити ваші backup файли в залежності від ноди.\e[0m"
     case "$node_name" in
         Lava)
             echo -e "\e[1m\e[32mLava:\e[0m"
-            echo "/root/.lava/data/priv_validator_state.json"
-            echo "/root/.lava/config/node_key.json"
-            echo "/root/.lava/config/priv_validator_key.json"
+            echo "$HOME/.lava/data/priv_validator_state.json"
+            echo "$HOME/.lava/config/node_key.json"
+            echo "$HOME/.lava/config/priv_validator_key.json"
             ;;
         Nibiru)
             echo -e "\e[1m\e[32mNibiru:\e[0m"
-            echo "/root/.nibid/data/priv_validator_state.json"
-            echo "/root/.nibid/config/node_key.json"
-            echo "/root/.nibid/config/priv_validator_key.json"
+            echo "$HOME/.nibid/data/priv_validator_state.json"
+            echo "$HOME/.nibid/config/node_key.json"
+            echo "$HOME/.nibid/config/priv_validator_key.json"
             ;;
         Gear)
             echo -e "\e[1m\e[32mGear:\e[0m"
-            echo "/root/.local/share/gear/chains/gear_staging_testnet_v7/network/"
+            echo "$HOME/.local/share/gear/chains/gear_staging_testnet_v7/network/"
             ;;
         Subspace)
             echo -e "\e[1m\e[32mSubspace:\e[0m"
-            echo "/root/.local/share/pulsar/node/chains/subspace_gemini_3g/network/"
+            echo "$HOME/.local/share/pulsar/node/chains/subspace_gemini_3g/network/"
             ;;
         Zetachain)
             echo -e "\e[1m\e[32mZetachain:\e[0m"
-            echo "/root/.zetacored/data/priv_validator_state.json"
-            echo "/root/.zetacored/config/node_key.json"
-            echo "/root/.zetacored/config/priv_validator.json"
+            echo "$HOME/.zetacored/data/priv_validator_state.json"
+            echo "$HOME/.zetacored/config/node_key.json"
+            echo "$HOME/.zetacored/config/priv_validator.json"
             ;;
         Dymension)
             echo -e "\e[1m\e[32mDymension:\e[0m"
@@ -200,7 +236,7 @@ function main_menu() {
         clear
         logo
         echo -e "\e[1m\e[32mВиберіть потрібний вам пункт:\e[0m"
-        echo "1 - Backup нод Lava, Nibiru, Gear, Subspace, Zetachain, Dymension, Babylon (виконується лише для встановленних на сервері, зберігаються в папку /root/BACKUPNODES)"
+        echo "1 - Backup нод Lava, Nibiru, Gear, Subspace, Zetachain, Dymension, Babylon (виконується лише для встановленних на сервері, зберігаються в папку $HOME/BACKUPNODES)"
         echo "2 - Перемістити бекап файли ноди (для випадку якщо ви перевстановили/оновили ноду/видалили вузол)"
         echo "3 - Переглянути шляхи зберігання бекап файлів у нодах"
         echo "4 - Вийти з меню"
