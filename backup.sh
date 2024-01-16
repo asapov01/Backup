@@ -69,14 +69,15 @@ function backup() {
             backup_node "$node_name" "$zetacore_source_dir" "${zetacore_files_to_copy[@]}"
             ;;
         Dymension)
-            dymension_source_dir="$HOME/.dymension/"
+            dymension_source_dir="$HOME/.dymension"
             dymension_files_to_copy=("config/priv_validator_key.json" "data/priv_validator_state.json")
             backup_node "$node_name" "$dymension_source_dir" "${dymension_files_to_copy[@]}"
             ;;
         Babylon)
-            babylon_source_dir="$HOME/.babylond/"
+            babylon_source_dir="$HOME/.babylond"
             babylon_files_to_copy=("config/priv_validator_key.json" "data/priv_validator_state.json")
             backup_node "$node_name" "$babylon_source_dir" "${babylon_files_to_copy[@]}"
+
             ;;
         *)
             echo "Некоректне ім'я ноди."
