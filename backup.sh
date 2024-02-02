@@ -136,7 +136,7 @@ function move_backup_files() {
             echo -e "\e[1m\e[32mБекап файли Gear перенесено\e[0m"
             ;;
         Subspace)
-            subspace_source_dir="$HOME/.local/share/pulsar/node/chains/subspace_gemini_3g/network/"
+            subspace_source_dir="$HOME/.local/share/subspace-node/network/"
             cp "$HOME/BACKUPNODES/Subspace backup/secret_ed25519" "$subspace_source_dir"
             echo -e "\e[1m\e[32mБекап файли Subspace перенесено\e[0m" && sleep 1
             ;;
