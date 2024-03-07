@@ -95,15 +95,14 @@ EOF
 
     printGreen "Завантажуємо снепшот та запускаємо ноду"
     sided tendermint unsafe-reset-all --home $HOME/.side
-if curl -s --head curl https://testnet-files.itrocket.net/side/snap_side.tar.lz4 | head -n 1 | grep "200" > /dev/null; then
-  curl https://testnet-files.itrocket.net/side/snap_side.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/.side
-    else
-fi
+    curl https://testnet-files.itrocket.net/side/snap_side.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/.side
+    
 
 
-sudo systemctl daemon-reload
-sudo systemctl enable sided
-sudo systemctl restart sided && sudo journalctl -u sided -f
+
+  sudo systemctl daemon-reload
+  sudo systemctl enable sided
+  sudo systemctl restart sided && sudo journalctl -u sided -f
 
   printDelimiter
   printGreen "Переглянути журнал логів:         sudo journalctl -u sided -f -o cat"
