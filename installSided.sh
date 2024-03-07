@@ -12,7 +12,7 @@ function install() {
   clear
   source <(curl -s https://raw.githubusercontent.com/CPITMschool/Scripts/main/logo.sh)
 
-  read -p "Введіть ім'я moniker(наприклад Oliver) :" MONIKER
+  read -p "Введіть ім'я moniker (наприклад, Oliver):" MONIKER
   echo 'export MONIKER='$MONIKER
   PORT="${PORT:-22}"
   echo "export PORT=$PORT"
@@ -90,7 +90,7 @@ function install() {
     LimitNOFILE=65535
     [Install]
     WantedBy=multi-user.target
-    EOF
+EOF
 
 
     printGreen "Завантажуємо снепшот та запускаємо ноду"
