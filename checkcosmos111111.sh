@@ -64,6 +64,7 @@ check_node_logs() {
     eval "$log_command"
   else
     sudo journalctl -u $service_name -n 25 -o cat
+    pkill -P $!
   fi
 
   echo ""
