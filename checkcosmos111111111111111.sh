@@ -51,12 +51,14 @@ check_node() {
   echo -e "\e[32mChecking logs for ${service_name}...\e[0m"
   if [ -n "$log_command" ]; then
     eval "$log_command" &
+    local log_pid=$!
     sleep $log_time
-    pkill -P $!
+    pkill -P $log_pid
   else
     sudo journalctl -u $service_name -f -o cat &
+    local log_pid=$!
     sleep $log_time
-    pkill -P $!
+    pkill -P $log_pid
   fi
 
   echo ""
