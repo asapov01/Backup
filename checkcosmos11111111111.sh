@@ -53,45 +53,30 @@ check_node_info() {
   echo ""
 }
 
-# Функція для перевірки журналу логів
-check_node_logs() {
-  local service_name=$1
-  local log_command=$2
-
-  echo -e "\e[32mChecking logs for ${service_name}...\e[0m"
-
+# Перевірка журналу логів
+  echo "Checking logs for ${service_name}..."
   if [ -n "$log_command" ]; then
-    eval "$log_command | tail -n 25"
+    eval "$log_command" &
+    sleep 1
+    pkill -P $!
   else
-    sudo journalctl -u $service_name -n 25 -o cat
+    sudo journalctl -u $service_name -n 25 -o cat &
+    sleep 1
+    pkill -P $!
   fi
-
-  echo ""
-  echo "---------------------------------------------"
-  echo ""
-}
 
 # Перевірка всіх нод
 check_node_info "lavad" "lava" "https://rpc.lava-testnet.unitynodes.com/status" false
-check_node_logs "lavad" ""
-sleep 1
-
 check_node_info "wardend" "warden" "https://rpc.warden-testnet.unitynodes.com/status" false
-check_node_logs "wardend" ""
-sleep 1
-
 check_node_info "initiad" "initia" "https://rpc.initia.unitynodes.com/status" false
-check_node_logs "initiad" ""
-sleep 1
-
 check_node_info "0gchaind" "0gchain" "https://rpc.0gchain-testnet.unitynodes.com/status" false
-check_node_logs "0gchaind" ""
-sleep 1
-
 check_node_info "zgs" "$HOME/0g-storage-node" "" true
-check_node_logs "zgs" "tail -n 25 $HOME/0g-storage-node/run/log/*"
-sleep 1
-
 check_node_info "sided" "side" "https://rpc.side-testnet.unitynodes.com/status" false
+
+# Перевірка логів для всіх нод
+check_node_logs "lavad" ""
+check_node_logs "wardend" ""
+check_node_logs "initiad" ""
+check_node_logs "0gchaind" ""
+check_node_logs "zgs" "tail -n 25 $HOME/0g-storage-node/run/log/*"
 check_node_logs "sided" ""
-sleep 1
