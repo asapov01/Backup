@@ -74,6 +74,7 @@ check_node_logs() {
   sleep 1
 }
 
+
 # Перевірка всіх нод
 check_node_info "lavad" "lava" "https://rpc.lava-testnet.unitynodes.com/status" false
 check_node_info "wardend" "warden" "https://rpc.warden-testnet.unitynodes.com/status" false
