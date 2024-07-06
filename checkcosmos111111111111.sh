@@ -53,17 +53,23 @@ check_node_info() {
   echo ""
 }
 
-# Перевірка журналу логів
-  echo "Checking logs for ${service_name}..."
+# Функція для перевірки журналу логів
+check_node_logs() {
+  local service_name=$1
+  local log_command=$2
+
+  echo -e "\e[32mChecking logs for ${service_name}...\e[0m"
+
   if [ -n "$log_command" ]; then
-    eval "$log_command" &
-    sleep 1
-    pkill -P $!
+    eval "$log_command | tail -n 25"
   else
-    sudo journalctl -u $service_name -n 25 -o cat &
-    sleep 1
-    pkill -P $!
+    sudo journalctl -u $service_name -n 25 -o cat
   fi
+
+  echo ""
+  echo "---------------------------------------------"
+  echo ""
+}
 
 # Перевірка всіх нод
 check_node_info "lavad" "lava" "https://rpc.lava-testnet.unitynodes.com/status" false
