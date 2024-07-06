@@ -63,17 +63,18 @@ check_node_logs() {
   if [ -n "$log_command" ]; then
     eval "$log_command | tail -n 25"
   else
-    sudo journalctl -u $service_name -n 25 -o cat
+    sudo journalctl -u $service_name -n 25 --output cat --no-pager
+
   fi
 
   echo ""
   echo "---------------------------------------------"
   echo ""
 
-  # Невелика затримка перед переходом до наступної ноди
+  # Закриття інтерактивного режиму
   sleep 1
+  pkill -P $!
 }
-
 
 # Перевірка всіх нод
 check_node_info "lavad" "lava" "https://rpc.lava-testnet.unitynodes.com/status" false
