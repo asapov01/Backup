@@ -7,11 +7,11 @@ check_node_info() {
   local rpc_url=$3
   local custom_dir=$4
 
-  echo -e "\e[32mПеревірка ${service_name} ноди...\e[0m"
+  echo -e "\e[32mChecking ${service_name} node...\e[0m"
 
   # Перевірка чи є процес ноди
   if ! pgrep -x "$service_name" > /dev/null; then
-    echo -e "\e[31mНода ${service_name} не встановлена або не запущена.\e[0m"
+    echo -e "\e[31mNode ${service_name} is not installed or not running.\e[0m"
     echo ""
     echo "---------------------------------------------"
     echo ""
@@ -20,15 +20,15 @@ check_node_info() {
 
   # Перевірка розміру директорії ноди
   if [ "$custom_dir" = true ]; then
-    echo -e "\e[32mРозмір директорії ноди:\e[0m"
+    echo -e "\e[32mNode directory size:\e[0m"
     du -sh "$dir_name"
   else
-    echo -e "\e[32mРозмір директорії ноди:\e[0m"
+    echo -e "\e[32mNode directory size:\e[0m"
     du -sh "$HOME/.${dir_name}"
   fi
 
   # Перевірка використання пам'яті процесом ноди
-  ps -p $(pgrep $service_name) -o rss= | awk '{printf("Процес використовує пам'ять: %.2f МБ\n", $1/1024)}'
+  ps -p $(pgrep $service_name) -o rss= | awk '{printf("The process uses memory: %.2f MB\n", $1/1024)}'
 
   # Перевірка висоти блоків, якщо надано URL для RPC
   if [ -n "$rpc_url" ]; then
@@ -36,11 +36,11 @@ check_node_info() {
     network_height=$(curl -s $rpc_url | jq -r .result.sync_info.latest_block_height)
     blocks_left=$((network_height - local_height))
 
-    echo -e "\e[32mВисота вашої ноди:\e[0m"
+    echo -e "\e[32mYour node height:\e[0m"
     echo -e "\e[31m$local_height\e[0m"
-    echo -e "\e[32mВисота мережі:\e[0m"
+    echo -e "\e[32mNetwork height:\e[0m"
     echo -e "\e[31m$network_height\e[0m"
-    echo -e "\e[32mЗалишилося блоків:\e[0m"
+    echo -e "\e[32mBlocks left:\e[0m"
     if [ $blocks_left -ge 0 ]; then
       echo -e "\e[31m$blocks_left\e[0m"
     else
@@ -58,11 +58,11 @@ check_node_logs() {
   local service_name=$1
   local log_command=$2
 
-  echo -e "\e[32mПеревірка логів для ${service_name}...\e[0m"
+  echo -e "\e[32mChecking logs for ${service_name}...\e[0m"
 
   # Перевірка чи є процес ноди
   if ! pgrep -x "$service_name" > /dev/null; then
-    echo -e "\e[31mНода ${service_name} не встановлена або не запущена. Перевірка логів пропущена.\e[0m"
+    echo -e "\e[31mNode ${service_name} is not installed or not running. Skipping log check.\e[0m"
     echo ""
     echo "---------------------------------------------"
     echo ""
@@ -80,7 +80,8 @@ check_node_logs() {
   echo ""
 
   # Закриття інтерактивного режиму
-  sleep 2
+  sleep 1
+  pkill -P $!
 }
 
 # Перевірка всіх нод
