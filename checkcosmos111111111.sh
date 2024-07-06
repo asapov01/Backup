@@ -53,7 +53,7 @@ check_node_info() {
   echo ""
 }
 
- # Функція для перевірки журналу логів
+# Функція для перевірки журналу логів
 check_node_logs() {
   local service_name=$1
   local log_command=$2
@@ -67,12 +67,6 @@ check_node_logs() {
     sudo journalctl -u $service_name -n 25 -o cat
     sleep 1
   fi
-
-  echo ""
-  echo "---------------------------------------------"
-  echo ""
-}
-
 
   echo ""
   echo "---------------------------------------------"
