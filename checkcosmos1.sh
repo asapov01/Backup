@@ -7,8 +7,9 @@ check_node() {
   local rpc_url=$3
   local log_command=$4
   local custom_dir=$5
+  local log_time=$6
 
-  echo "Checking ${service_name} node..."
+  echo -e "\e[32mChecking ${service_name} node...\e[0m"
 
   # Перевірка чи є процес ноди
   if ! pgrep -x "$service_name" > /dev/null; then
@@ -18,10 +19,10 @@ check_node() {
 
   # Перевірка розміру директорії ноди
   if [ "$custom_dir" = true ]; then
-    echo "Node directory size:"
+    echo -e "\e[32mNode directory size:\e[0m"
     du -sh "$dir_name"
   else
-    echo "Node directory size:"
+    echo -e "\e[32mNode directory size:\e[0m"
     du -sh "$HOME/.${dir_name}"
   fi
 
@@ -33,30 +34,40 @@ check_node() {
     local_height=$($service_name status | jq -r .sync_info.latest_block_height)
     network_height=$(curl -s $rpc_url | jq -r .result.sync_info.latest_block_height)
     blocks_left=$((network_height - local_height))
-    echo "Your node height: $local_height"
-    echo "Network height: $network_height"
-    echo "Blocks left: $blocks_left"
+
+    echo -e "\e[32mYour node height:\e[0m"
+    echo -e "\e[31m$local_height\e[0m"
+    echo -e "\e[32mNetwork height:\e[0m"
+    echo -e "\e[31m$network_height\e[0m"
+    echo -e "\e[32mBlocks left:\e[0m"
+    if [ $blocks_left -ge 0 ]; then
+      echo -e "\e[31m$blocks_left\e[0m"
+    else
+      echo -e "\e[32m$blocks_left\e[0m"
+    fi
   fi
 
   # Перевірка журналу логів
-  echo "Checking logs for ${service_name}..."
+  echo -e "\e[32mChecking logs for ${service_name}...\e[0m"
   if [ -n "$log_command" ]; then
     eval "$log_command" &
-    sleep 5
+    sleep $log_time
     pkill -P $!
   else
     sudo journalctl -u $service_name -f -o cat &
-    sleep 5
+    sleep $log_time
     pkill -P $!
   fi
 
+  echo ""
   echo "---------------------------------------------"
+  echo ""
 }
 
 # Перевірка всіх нод
-check_node "lavad" "lava" "https://rpc.lava-testnet.unitynodes.com/status"
-check_node "wardend" "warden" "https://rpc.warden-testnet.unitynodes.com/status"
-check_node "initiad" "initia" "https://rpc.initia.unitynodes.com/status"
-check_node "0gchaind" "0gchain" "https://rpc.0gchain-testnet.unitynodes.com/status"
-check_node "zgs" "$HOME/0g-storage-node" "" "tail -f $HOME/0g-storage-node/run/log/*" true
-check_node "sided" "side" "https://rpc.side-testnet.unitynodes.com/status"
+check_node "lavad" "lava" "https://rpc.lava-testnet.unitynodes.com/status" "" false 3
+check_node "wardend" "warden" "https://rpc.warden-testnet.unitynodes.com/status" "" false 3
+check_node "initiad" "initia" "https://rpc.initia.unitynodes.com/status" "" false 3
+check_node "0gchaind" "0gchain" "https://rpc.0gchain-testnet.unitynodes.com/status" "" false 3
+check_node "zgs" "$HOME/0g-storage-node" "" "tail -f $HOME/0g-storage-node/run/log/*" true 3
+check_node "sided" "side" "https://rpc.side-testnet.unitynodes.com/status" "" false 3
