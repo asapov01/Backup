@@ -1,20 +1,19 @@
 #!/bin/bash
 
 # Функція для перевірки ноди
-check_node_info() {
+check_node() {
   local service_name=$1
   local dir_name=$2
   local rpc_url=$3
-  local custom_dir=$4
+  local log_command=$4
+  local custom_dir=$5
+  local log_time=$6
 
   echo -e "\e[32mChecking ${service_name} node...\e[0m"
 
   # Перевірка чи є процес ноди
   if ! pgrep -x "$service_name" > /dev/null; then
     echo -e "\e[31mNode ${service_name} is not installed or not running.\e[0m"
-    echo ""
-    echo "---------------------------------------------"
-    echo ""
     return
   fi
 
@@ -48,45 +47,27 @@ check_node_info() {
     fi
   fi
 
-  echo ""
-  echo "---------------------------------------------"
-  echo ""
-}
-
-# Функція для перевірки журналу логів
-check_node_logs() {
-  local service_name=$1
-  local log_command=$2
-
+  # Перевірка журналу логів
   echo -e "\e[32mChecking logs for ${service_name}...\e[0m"
-
   if [ -n "$log_command" ]; then
-    eval "$log_command | tail -n 25"
+    eval "$log_command" &
+    sleep $log_time
+    pkill -P $!
   else
-    sudo journalctl -u $service_name -n 25 -o cat
+    sudo journalctl -u $service_name -f -o cat &
+    sleep $log_time
+    pkill -P $!
   fi
 
   echo ""
   echo "---------------------------------------------"
   echo ""
-
-  # Закриття інтерактивного режиму
-  sleep 1
-  pkill -P $!
 }
 
 # Перевірка всіх нод
-check_node_info "lavad" "lava" "https://rpc.lava-testnet.unitynodes.com/status" false
-check_node_info "wardend" "warden" "https://rpc.warden-testnet.unitynodes.com/status" false
-check_node_info "initiad" "initia" "https://rpc.initia.unitynodes.com/status" false
-check_node_info "0gchaind" "0gchain" "https://rpc.0gchain-testnet.unitynodes.com/status" false
-check_node_info "zgs" "$HOME/0g-storage-node" "" true
-check_node_info "sided" "side" "https://rpc.side-testnet.unitynodes.com/status" false
-
-# Перевірка логів для всіх нод
-check_node_logs "lavad" ""
-check_node_logs "wardend" ""
-check_node_logs "initiad" ""
-check_node_logs "0gchaind" ""
-check_node_logs "zgs" "tail -n 25 $HOME/0g-storage-node/run/log/*"
-check_node_logs "sided" ""
+check_node "lavad" "lava" "https://rpc.lava-testnet.unitynodes.com/status" "" false 3
+check_node "wardend" "warden" "https://rpc.warden-testnet.unitynodes.com/status" "" false 3
+check_node "initiad" "initia" "https://rpc.initia.unitynodes.com/status" "" false 3
+check_node "0gchaind" "0gchain" "https://rpc.0gchain-testnet.unitynodes.com/status" "" false 3
+check_node "zgs" "$HOME/0g-storage-node" "" "tail -f $HOME/0g-storage-node/run/log/*" true 3
+check_node "sided" "side" "https://rpc.side-testnet.unitynodes.com/status" "" false 3
