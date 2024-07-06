@@ -53,15 +53,11 @@ check_node_info() {
   echo ""
 }
 
-# Функція для перевірки журналу логів
-check_node_logs() {
-  local service_name=$1
-  local log_command=$2
-
-  echo -e "\e[32mChecking logs for ${service_name}...\e[0m"
-
+ # Перевірка журналу логів
+  echo "Checking logs for ${service_name}..."
   if [ -n "$log_command" ]; then
-    eval "$log_command"
+    eval "$log_command | tail -n 25"
+    pkill -P $!
   else
     sudo journalctl -u $service_name -n 25 -o cat
     pkill -P $!
