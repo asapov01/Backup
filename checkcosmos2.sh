@@ -10,6 +10,7 @@ check_node_info() {
   echo -e "\e[32mChecking \e[33m${service_name}\e[32m node...\e[0m"
 
 
+
   # Перевірка чи є процес ноди
   if ! pgrep -x "$service_name" > /dev/null; then
     echo -e "\e[31mNode ${service_name} is not installed or not running.\e[0m"
