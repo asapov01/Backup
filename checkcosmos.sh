@@ -59,7 +59,7 @@ check_node_logs() {
   local service_name=$1
   local log_command=$2
 
-  echo -e "\e[32mChecking logs for ${service_name}...\e[0m"
+  echo -e "\e[32mChecking logs for \e[33m${service_name}\e[32m...\e[0m"
 
   # Перевірка чи є процес ноди
   if ! pgrep -x "$service_name" > /dev/null; then
