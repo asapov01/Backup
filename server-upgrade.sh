@@ -40,6 +40,16 @@ screen -dmS upgrade bash -c "
   sudo apt-get install -y docker-compose
   docker-compose --version
 
+  #Rust
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  source $HOME/.cargo/env
+
+# Оновлення Rust та встановлення нічної версії і таргету wasm
+rustup default stable
+rustup update
+rustup update nightly
+rustup target add wasm32-unknown-unknown --toolchain nightly
+
   # Встановлення Go
   sudo rm -rf /usr/local/go
   curl -L https://go.dev/dl/go1.21.6.linux-amd64.tar.gz | sudo tar -xzf - -C /usr/local
