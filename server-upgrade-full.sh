@@ -7,7 +7,6 @@ if [ ! -f "$HOME/.bash_profile" ]; then
 fi
 
 # Оновлення та встановлення screen
-sudo apt update && sudo apt upgrade -y
 sudo apt install -y screen
 
 # Повідомлення користувачу
