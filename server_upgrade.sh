@@ -6,13 +6,23 @@ if [ ! -f "$HOME/.bash_profile" ]; then
   echo "Created .bash_profile"
 fi
 
+# Оновлення та встановлення screen
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y screen
+
+# Повідомлення користувачу
+echo "Подальші оновлення відбудуться в сесії 'upgrade'."
+echo "Переглянути список сесій ви можете командою 'screen -ls'."
+echo "Підключитись до сесії оновлення можна командою 'screen -r upgrade'."
+echo "Ви можете увійти в сесію, закрити сервер, або ж відключитись саме від сесії комбінацією Ctrl + A + D, і продовжити роботу на сервері, але рекомендується дочекатись повного оновлення серверу."
+
 # Запускаємо screen сесію для оновлення та встановлення пакетів
-screen -dmS upgrade_session bash -c "
+screen -dmS upgrade bash -c "
   # Оновлення та оновлення системи
   sudo apt update && sudo apt upgrade -y
 
   # Встановлення основних пакетів
-  sudo apt install -y lz4 jq make git gcc build-essential curl chrony unzip gzip snapd tmux bc screen asic2 ufw htop net-tools ncdu 
+  sudo apt install -y lz4 jq make git gcc build-essential curl chrony unzip gzip snapd tmux bc asic2 ufw htop net-tools ncdu 
   sudo apt install -y ca-certificates zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev
 
   # Встановлення Python
@@ -49,4 +59,4 @@ screen -dmS upgrade_session bash -c "
   echo 'Усі пакети встановлені та налаштовані.'
 "
 
-echo "Всі команди запущені у новій screen сесії з ім'ям 'upgrade_session'."
+echo "Всі команди запущені у новій screen сесії з ім'ям 'upgrade'."
