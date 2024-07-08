@@ -7,7 +7,7 @@ check_node_info() {
   local rpc_url=$3
   local custom_dir=$4
 
-  echo -e "\e[32mChecking \e[31m${service_name}\e[0m node...\e[32m"
+  echo -e "\e[32mChecking \e[38;5;208m${service_name}\e[32m node...\e[0m"
 
   # Перевірка чи є процес ноди
   if ! pgrep -x "$service_name" > /dev/null; then
