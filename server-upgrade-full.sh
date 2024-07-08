@@ -51,9 +51,6 @@ screen -dmS upgrade bash -c "
   source ~/.bashrc
   nvm install --lts
 
-  # Встановлення Rust
-  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-  source \$HOME/.cargo/env
 
   echo 'Усі пакети встановлені та налаштовані.'
 "
