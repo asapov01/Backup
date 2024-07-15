@@ -45,7 +45,7 @@ rustup target add wasm32-unknown-unknown --toolchain nightly
 
 printColor blue "Install 0G Storage"
 cd $HOME
-git clone -b v0.3.0 https://github.com/0glabs/0g-storage-node.git
+git clone -b v0.3.3 https://github.com/0glabs/0g-storage-node.git
 cd 0g-storage-node
 git submodule update --init
 cargo build --release
