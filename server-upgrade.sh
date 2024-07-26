@@ -72,6 +72,11 @@ rustup target add wasm32-unknown-unknown --toolchain nightly
   # Встановлення CPI.NODE Manager
   wget -qO- https://github.com/CPITMschool/Scripts/releases/download/v.1.0.0/cpinodes_manager.xz | xz -d | tar --strip-components=1 -C /root/ -xvf - && chmod +x /root/cpinodes && sudo rm -f /usr/local/bin/cpinodes && sudo ln -s /root/cpinodes /usr/local/bin/cpinodes
 
+  # Перевірка наявності speedtest-cli, встановлення та виконання тесту швидкості інтернету
+  if ! command -v speedtest-cli &> /dev/null; then
+      sudo apt-get update
+      sudo apt-get install -y speedtest-cli
+  fi
 
   echo 'Усі пакети встановлені та налаштовані.'
 "
