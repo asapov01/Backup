@@ -28,6 +28,15 @@ screen -dmS upgrade bash -c "
   sudo apt install -y python3 python3-pip
   python3 --version
   pip3 --version
+  sudo apt install pip
+  echo "requests==2.25.1
+  flask==1.1.2
+  numpy==1.19.5
+  pandas==1.2.4
+  dnspython
+  psutil
+  tcp-latency" > requirements.txt
+  pip install -r requirements.txt
 
   # Встановлення Docker
   sudo apt-get install -y docker-ce=5:26.1.4-1~ubuntu.20.04~focal docker-ce-cli=5:26.1.4-1~ubuntu.20.04~focal containerd.io
