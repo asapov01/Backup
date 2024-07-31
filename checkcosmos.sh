@@ -9,7 +9,6 @@ check_node_info() {
 
   echo -e "\e[32mChecking \e[33m${service_name}\e[32m node...\e[0m"
 
-
   # Перевірка чи є процес ноди
   if ! pgrep -x "$service_name" > /dev/null; then
     echo -e "\e[31mNode ${service_name} is not installed or not running.\e[0m"
@@ -84,14 +83,6 @@ check_node_logs() {
   sleep 1
 }
 
-# Перевірка всіх нод
-check_node_info "lavad" "lava" "https://rpc.lava-testnet.unitynodes.com/status" false
-check_node_info "wardend" "warden" "https://rpc.warden-testnet.unitynodes.com/status" false
-check_node_info "initiad" "initia" "https://rpc.initia.unitynodes.com/status" false
-check_node_info "0gchaind" "0gchain" "https://rpc.0gchain-testnet.unitynodes.com/status" false
-check_node_info "zgs" "$HOME/0g-storage-node" "" true
-check_node_info "sided" "side" "https://rpc.side-testnet.unitynodes.com/status" false
-
 # Перевірка логів для всіх нод
 check_node_logs "lavad" ""
 check_node_logs "wardend" ""
@@ -99,3 +90,11 @@ check_node_logs "initiad" ""
 check_node_logs "0gchaind" ""
 check_node_logs "zgs" "tail -n 25 $HOME/0g-storage-node/run/log/*"
 check_node_logs "sided" ""
+
+# Перевірка всіх нод
+check_node_info "lavad" "lava" "https://rpc.lava-testnet.unitynodes.com/status" false
+check_node_info "wardend" "warden" "https://rpc.warden-testnet.unitynodes.com/status" false
+check_node_info "initiad" "initia" "https://rpc.initia.unitynodes.com/status" false
+check_node_info "0gchaind" "0gchain" "https://rpc.0gchain-testnet.unitynodes.com/status" false
+check_node_info "zgs" "$HOME/0g-storage-node" "" true
+check_node_info "sided" "side" "https://rpc.side-testnet.unitynodes.com/status" false
