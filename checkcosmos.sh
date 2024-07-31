@@ -88,7 +88,7 @@ check_node_logs "lavad" ""
 check_node_logs "wardend" ""
 check_node_logs "initiad" ""
 check_node_logs "0gchaind" ""
-check_node_logs "zgs" "tail -n 25 $HOME/0g-storage-node/run/log/*"
+check_node_logs "tail -n 25 $HOME/0g-storage-node/run/log/zgs.log.$(TZ=UTC date +%Y-%m-%d)"
 check_node_logs "sided" ""
 
 # Перевірка всіх нод
