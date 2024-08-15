@@ -1,0 +1,92 @@
+#!/bin/bash
+
+### Utils Unity Nodes
+source <(curl -s https://raw.githubusercontent.com/UnityNodes/scripts/main/utils.sh)
+
+clear
+logo
+
+echo -e "\e[30;47m Please enter the node moniker:\e[0m"
+echo -en ">>> "
+read -r NODE_MONIKER
+
+### Install Dependencies
+source <(curl -s https://raw.githubusercontent.com/UnityNodes/scripts/main/dependencies.sh)
+
+### Building binaries
+echo ""
+printColor blue "[4/6] Building binaries"
+
+# Clone project repository
+cd $HOME
+rm -rf fairyring
+git clone https://github.com/Fairblock/fairyring.git
+cd fairyring
+git checkout v0.8.2
+
+# Build binary
+make install
+
+fairyringd init "$NODE_MONIKER" --chain-id fairyring-testnet-2 && \
+fairyringd config chain-id fairyring-testnet-2 && \
+fairyringd config keyring-backend test
+
+
+### Download genesis and addrbook
+wget https://storage.crouton.digital/testnet/fairblock/files/genesis.json -O $HOME/.fairyring/config/genesis.json
+wget https://storage.crouton.digital/testnet/fairblock/files/addrbook.json -O $HOME/.fairyring/config/addrbook.json
+
+
+# Set seeds, peers
+
+### Minimum gas price
+sed -i.bak -e "s|^minimum-gas-prices *=.*|minimum-gas-prices = '0.001ufairy'|"  
+
+### Set pruning
+pruning="custom"
+pruning_keep_recent="100"
+pruning_keep_every="0"
+pruning_interval="10"
+sed -i -e "s/^pruning *=.*/pruning = \"$pruning\"/" $HOME/.fairyring/config/app.toml
+sed -i -e "s/^pruning-keep-recent *=.*/pruning-keep-recent = \"$pruning_keep_recent\"/" $HOME/.fairyring/config/app.toml
+sed -i -e "s/^pruning-keep-every *=.*/pruning-keep-every = \"$pruning_keep_every\"/" $HOME/.fairyring/config/app.toml
+sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $HOME/.fairyring/config/app.toml
+
+# Download snapshot
+curl "https://storage.crouton.digital/testnet/fairblock/snapshots/fairblock_latest.tar.lz4" | lz4 -dc - | tar -xf - -C "$HOME/.0gchain"
+
+### Create service
+sudo tee /etc/systemd/system/fairyringd.service > /dev/null <<EOF
+[Unit]
+Description=fairblock_node
+After=network.target
+
+[Service]
+User=$USER
+Type=simple
+ExecStart=$(which fairyringd) start --home $HOME/.fairyring
+Restart=on-failure
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+### Start service and run node
+echo ""
+printColor blue "[6/6] Start service and run node"
+
+sudo systemctl daemon-reload
+sudo systemctl enable fairyringd.service
+sudo systemctl start fairyringd.service
+
+### Useful commands
+echo ""
+printLine
+printColor blue "Check your logs        >>> journalctl -u fairyringd -f -o cat "
+printColor blue "Check synchronization  >>> fairyringd status | jq | grep \"catching_up\" "
+printLine
+printColor blue "Enjoy Unity Nodes      >>> https://unitynodes.com"
+printColor blue "Our service            >>> https://services.unitynodes.com"
+printColor blue "Our blog               >>> https://medium.com/@unitynodes"
+printLine
