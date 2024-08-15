@@ -36,11 +36,8 @@ fairyringd config keyring-backend test
 wget https://storage.crouton.digital/testnet/fairblock/files/genesis.json -O $HOME/.fairyring/config/genesis.json
 wget https://storage.crouton.digital/testnet/fairblock/files/addrbook.json -O $HOME/.fairyring/config/addrbook.json
 
-
-# Set seeds, peers
-
 ### Minimum gas price
-sed -i.bak -e "s|^minimum-gas-prices *=.*|minimum-gas-prices = '0.001ufairy'|"  
+sed -i.bak -e "s|^minimum-gas-prices *=.*|minimum-gas-prices = '0.001ufairy'|"  $HOME/.fairyring/config/app.toml
 
 ### Set pruning
 pruning="custom"
@@ -53,7 +50,7 @@ sed -i -e "s/^pruning-keep-every *=.*/pruning-keep-every = \"$pruning_keep_every
 sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $HOME/.fairyring/config/app.toml
 
 # Download snapshot
-curl "https://storage.crouton.digital/testnet/fairblock/snapshots/fairblock_latest.tar.lz4" | lz4 -dc - | tar -xf - -C "$HOME/.0gchain"
+curl "https://storage.crouton.digital/testnet/fairblock/snapshots/fairblock_latest.tar.lz4" | lz4 -dc - | tar -xf - -C "$HOME/.fairyring"
 
 ### Create service
 sudo tee /etc/systemd/system/fairyringd.service > /dev/null <<EOF
