@@ -21,8 +21,8 @@ screen -dmS upgrade bash -c "
   sudo apt update && sudo apt upgrade -y
 
   # Встановлення основних пакетів
-  sudo apt install -y lz4 jq make git gcc build-essential curl chrony unzip gzip snapd tmux bc asic2 ufw htop net-tools ncdu nodejs 
-  sudo apt install -y ca-certificates zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev
+ sudo apt install -y lz4 jq make git gcc build-essential curl chrony unzip gzip snapd tmux bc asic2 ufw htop net-tools ncdu nodejs ca-certificates zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev wget pkg-config lsb-release libssl-dev libreadline-dev libffi-dev screen
+
 
   # Встановлення Python
   sudo apt install -y python3 python3-pip
