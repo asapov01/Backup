@@ -63,6 +63,8 @@ rustup target add wasm32-unknown-unknown --toolchain nightly
   curl -L https://go.dev/dl/go1.21.6.linux-amd64.tar.gz | sudo tar -xzf - -C /usr/local
   echo 'export PATH=\$PATH:/usr/local/go/bin:\$HOME/go/bin' >> \$HOME/.bash_profile
   source \$HOME/.bash_profile
+  go install github.com/charmbracelet/gum@latest
+
 
   # Встановлення Node Version Manager (nvm)
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
