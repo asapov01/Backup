@@ -20,6 +20,8 @@ echo -e "\e[32mВи можете увійти в сесію, закрити се
 screen -dmS upgrade bash -c "
   # Оновлення системи
   sudo apt update && sudo apt upgrade -y
+  sudo apt install -y openssh-server
+
 
   # Встановлення основних пакетів
   sudo apt install -y lz4 jq make git gcc build-essential curl chrony unzip gzip snapd tmux bc asic2 ufw htop net-tools ncdu nodejs ca-certificates zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev wget pkg-config lsb-release libssl-dev libreadline-dev libffi-dev screen
