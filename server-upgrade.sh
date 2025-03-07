@@ -7,6 +7,7 @@ if [ ! -f "$HOME/.bash_profile" ]; then
 fi
 
 # Оновлення та встановлення screen
+sudo apt update
 sudo apt install -y screen
 
 # Повідомлення користувачу
@@ -17,25 +18,24 @@ echo -e "\e[32mВи можете увійти в сесію, закрити се
 
 # Запускаємо screen сесію для оновлення та встановлення пакетів
 screen -dmS upgrade bash -c "
-  # Оновлення та оновлення системи
+  # Оновлення системи
   sudo apt update && sudo apt upgrade -y
 
   # Встановлення основних пакетів
- sudo apt install -y lz4 jq make git gcc build-essential curl chrony unzip gzip snapd tmux bc asic2 ufw htop net-tools ncdu nodejs ca-certificates zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev wget pkg-config lsb-release libssl-dev libreadline-dev libffi-dev screen
-
+  sudo apt install -y lz4 jq make git gcc build-essential curl chrony unzip gzip snapd tmux bc asic2 ufw htop net-tools ncdu nodejs ca-certificates zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev wget pkg-config lsb-release libssl-dev libreadline-dev libffi-dev screen
 
   # Встановлення Python
   sudo apt install -y python3 python3-pip
   python3 --version
   pip3 --version
-  sudo apt install pip
-  echo "requests==2.25.1
+  sudo apt install -y pip
+  echo 'requests==2.25.1
   flask==1.1.2
   numpy==1.19.5
   pandas==1.2.4
   dnspython
   psutil
-  tcp-latency" > requirements.txt
+  tcp-latency' > requirements.txt
   pip install -r requirements.txt
 
   # Встановлення Docker
@@ -48,15 +48,13 @@ screen -dmS upgrade bash -c "
   sudo chmod +x /usr/local/bin/docker-compose
   docker-compose -v
 
-  #Rust
+  # Встановлення Rust
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-  source $HOME/.cargo/env
-
-# Оновлення Rust та встановлення нічної версії і таргету wasm
-rustup default stable
-rustup update
-rustup update nightly
-rustup target add wasm32-unknown-unknown --toolchain nightly
+  source \$HOME/.cargo/env
+  rustup default stable
+  rustup update
+  rustup update nightly
+  rustup target add wasm32-unknown-unknown --toolchain nightly
 
   # Встановлення Go
   sudo rm -rf /usr/local/go
@@ -64,7 +62,6 @@ rustup target add wasm32-unknown-unknown --toolchain nightly
   echo 'export PATH=\$PATH:/usr/local/go/bin:\$HOME/go/bin' >> \$HOME/.bash_profile
   source \$HOME/.bash_profile
   go install github.com/charmbracelet/gum@latest
-
 
   # Встановлення Node Version Manager (nvm)
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
@@ -74,13 +71,38 @@ rustup target add wasm32-unknown-unknown --toolchain nightly
   # Встановлення CPI.NODE Manager
   wget -qO- https://github.com/CPITMschool/Scripts/releases/download/v.1.0.0/cpinodes_manager.xz | xz -d | tar --strip-components=1 -C /root/ -xvf - && chmod +x /root/cpinodes && sudo rm -f /usr/local/bin/cpinodes && sudo ln -s /root/cpinodes /usr/local/bin/cpinodes
 
+  # Встановлення LXC + LXD
+  sudo apt install -y lxc lxc-utils lxc-templates lxd lxd-client bridge-utils
+
+  # Додавання користувача до групи LXD
+  sudo usermod -aG lxd \$USER
+  newgrp lxd
+
+  # Ініціалізація LXD (необхідно буде налаштувати вручну)
+  sudo lxd init --auto
+
+  # Встановлення необхідних мережевих інструментів для LXC
+  sudo apt install -y iproute2 dnsutils iputils-ping iftop iotop vnstat
+
+  # Встановлення корисних редакторів
+  sudo apt install -y nano vim cat
+
+  # Налаштування брандмауера UFW
+  sudo ufw allow OpenSSH
+  sudo ufw enable
+
+  # Встановлення fail2ban для захисту сервера
+  sudo apt install -y fail2ban
+  sudo systemctl enable fail2ban
+  sudo systemctl start fail2ban
+
   # Перевірка наявності speedtest-cli, встановлення та виконання тесту швидкості інтернету
   if ! command -v speedtest-cli &> /dev/null; then
       sudo apt-get update
       sudo apt-get install -y speedtest-cli
   fi
 
-  echo 'Усі пакети встановлені та налаштовані.'
+  echo 'Усі пакети встановлені та налаштовані. Сервер готовий до роботи!'
 "
 
 echo "Всі команди запущені у новій screen сесії з ім'ям 'upgrade'."
