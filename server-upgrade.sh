@@ -86,15 +86,8 @@ screen -dmS upgrade bash -c "
 
   # Встановлення корисних редакторів
   sudo apt install -y nano vim cat
-
-  # Налаштування брандмауера UFW
-  sudo ufw allow OpenSSH
-  sudo ufw enable
-
-  # Встановлення fail2ban для захисту сервера
   sudo apt install -y fail2ban
-  sudo systemctl enable fail2ban
-  sudo systemctl start fail2ban
+
 
   # Перевірка наявності speedtest-cli, встановлення та виконання тесту швидкості інтернету
   if ! command -v speedtest-cli &> /dev/null; then
