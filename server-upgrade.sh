@@ -39,14 +39,21 @@ screen -dmS upgrade bash -c "
   pip install -r requirements.txt
 
   # Встановлення Docker
-  sudo apt-get install -y docker-ce=5:26.1.4-1~ubuntu.20.04~focal docker-ce-cli=5:26.1.4-1~ubuntu.20.04~focal containerd.io
-  export PATH=/usr/local/bin:$PATH
-  docker -v
+ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  
+  sudo apt-get update
+  sudo apt-get install docker-ce docker-ce-cli containerd.io
+  docker version
 
   # Встановлення Docker Compose
-  sudo curl -L "https://github.com/docker/compose/releases/download/v2.26.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
-  sudo chmod +x /usr/local/bin/docker-compose
-  docker-compose -v
+ VER=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep tag_name | cut -d '"' -f 4)
+
+curl -L "https://github.com/docker/compose/releases/download/"$VER"/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+chmod +x /usr/local/bin/docker-compose
+docker-compose --version
 
   # Встановлення Rust
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
