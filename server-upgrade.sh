@@ -21,6 +21,8 @@ screen -dmS upgrade bash -c "
   # Оновлення системи
   sudo apt update && sudo apt upgrade -y
   sudo apt install -y openssh-server
+  sudo apt install -y aria2
+
 
 
   # Встановлення основних пакетів
