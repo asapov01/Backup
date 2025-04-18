@@ -15,6 +15,15 @@ read -p "Введіть IP-адресу (наприклад, 135.181.219.90/26):
 read -p "Введіть MAC-адресу (наприклад, 00:50:56:00:E1:D7): " MAC
 read -p "Введіть ім'я контейнера: " CONTAINER_NAME
 
+# Отримуємо шлюз з ip route
+GATEWAY=$(ip route | grep default | awk '{print $3}')
+
+# Перевірка, чи знайдений шлюз
+if [ -z "$GATEWAY" ]; then
+  echo "Не вдалося знайти шлюз за замовчуванням."
+  exit 1
+fi
+
 # Файл конфігурації контейнера
 LXC_CONFIG="/var/lib/lxc/$CONTAINER_NAME/config"
 
@@ -34,7 +43,7 @@ lxc.net.0.link = $INTERFACE
 lxc.net.0.macvlan.mode = bridge
 lxc.net.0.hwaddr = $MAC
 lxc.net.0.ipv4.address = $IP
-lxc.net.0.ipv4.gateway = $(echo $IP | cut -d'.' -f1,2,3).1
+lxc.net.0.ipv4.gateway = $GATEWAY
 lxc.net.0.flags = up
 
 # Enable autostart
